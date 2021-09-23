@@ -3,37 +3,36 @@ import board
 import adafruit_dht
 import statistics
 import math
+import sys
 
-def hygrothermo():
+def get_hygrothermo():
     dhtDevice = adafruit_dht.DHT22(board.D23)
-    l_temp = []
-    l_humidity = []
+    temperature = []
+    humidity = []
+    INTERVAL = 2.0
 
     for i in range(10):
         try:
-            temperature_c = dhtDevice.temperature
-            l_temp.append(temperature_c)
-            # temperature_f = temperature_c * (9 / 5) + 32
-            humidity = dhtDevice.humidity
-            l_humidity.append(humidity)
+            temperature.append(dhtDevice.temperature)
+            humidity.append(dhtDevice.humidity)
 
         except RuntimeError as error:
-            print(error.args[0])
+            print(error.args[0], file=sys.stderr)
             time.sleep(2.0)
             continue
         except Exception as error:
             dhtDevice.exit()
             raise error
 
-        time.sleep(2.0)
+        time.sleep(INTERVAL)
     
-    temperature_c_median = statistics.median(l_temp)
-    humidity_median = statistics.median(l_humidity)
+    temperature_median = statistics.median(temperature)
+    humidity_median = statistics.median(humidity)
 
-    return temperature_c_median, humidity_median
+    return temperature_median, humidity_median
 
 if __name__=='__main__':
-    t, h = hygrothermo()
+    t, h = get_hygrothermo()
     print(
         "Temp: {:.1f} C    Humidity: {}% ".format(t, h)
     )

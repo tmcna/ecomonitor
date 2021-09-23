@@ -2,8 +2,8 @@ import json
 import requests
 import datetime
 import os
-import hygrothermo
-import co2
+from hygrothermo import get_hygrothermo
+from co2 import get_co2
 
 def make_json(temperature, humidity, co2):
     dt = datetime.datetime.now()
@@ -16,12 +16,12 @@ def make_json(temperature, humidity, co2):
         "co2": co2
     })
 
-def main():
+def post_data():
 
     url = os.getenv('ECOMONITOR_URL')
 
-    temperature, humidity = hygrothermo.hygrothermo()
-    c = co2.co2()
+    temperature, humidity = get_hygrothermo()
+    c = get_co2()
 
     response = requests.post(
         url,
@@ -30,4 +30,4 @@ def main():
     )
 
 if __name__=='__main__':
-    main()
+    post_data()
