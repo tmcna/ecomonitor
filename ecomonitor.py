@@ -21,11 +21,11 @@ def post_data():
     url = os.getenv('ECOMONITOR_URL')
 
     temperature, humidity = get_hygrothermo()
-    c = get_co2()
+    co2 = get_co2()
 
     response = requests.post(
         url,
-        make_json(temperature, humidity, c),
+        make_json(temperature, humidity, co2),
         headers={'Content-Type': 'application/json'}
     )
 
